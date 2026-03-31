@@ -171,6 +171,7 @@ footer{ background:var(--bg);border-top:1px solid var(--border); padding:60px 5%
 .live-label{ background:var(--red);color:white;font-size:10px;font-weight:700; padding:3px 10px;border-radius:4px;letter-spacing:1.5px;flex-shrink:0; }
 .ticker-wrap{overflow:hidden;flex:1;}
 .ticker{ display:flex;gap:60px;white-space:nowrap; animation:ticker 20s linear infinite;font-size:13px;color:#f87171; }
+.tutor-avatar img { width: 100%;height: 100%;object-fit: cover;border-radius: 50%;}
 @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @media(max-width:900px){ .hero-inner{grid-template-columns:1fr;} .hero-visual{display:none;} .tutor-inner{grid-template-columns:1fr;} .footer-inner{grid-template-columns:1fr 1fr;} .nav-links{display:none;} .hamburger{display:flex;} }
 @media(max-width:600px){ section{padding:70px 5%;} .hero-stats{flex-wrap:wrap;gap:20px;} .footer-inner{grid-template-columns:1fr;} .live-bar{display:none;} nav{padding:14px 5%;} }
@@ -185,7 +186,6 @@ footer{ background:var(--bg);border-top:1px solid var(--border); padding:60px 5%
   <span class="live-label">🔴 LIVE</span>
   <div class="ticker-wrap">
     <div class="ticker">
-      <span>🎓 Class 10 Maths — Chapter 6: Triangles starting NOW &nbsp;•&nbsp;</span>
       <span>📢 THIS WEBSITE IS STILL UNDER DEVELOPMENT &nbsp;•&nbsp;</span>
       <span>📢 New batch starting on 1st April 2026 &nbsp;•&nbsp;</span>
       <span>📢 For More Info Contact:-9103838624 &nbsp;•&nbsp;</span>
@@ -239,16 +239,6 @@ footer{ background:var(--bg);border-top:1px solid var(--border); padding:60px 5%
             <div class="hcard-title">Quadratic Equations</div>
             <div class="hcard-tutor">by <span>Aquib Khan Sir</span></div>
           </div>
-          <div class="hcard-body">
-            <div class="progress-label"><span>Course Progress</span><span style="color:var(--gold)">68%</span></div>
-            <div class="progress-bar"><div class="progress-fill"></div></div>
-            <div class="hcard-lessons">
-              <div class="lesson-row"><div class="lesson-icon done">✅</div><div class="lesson-name">Introduction to Polynomials</div><span class="lesson-badge badge-done">Done</span></div>
-              <div class="lesson-row"><div class="lesson-icon active">▶️</div><div class="lesson-name">Quadratic Formula</div><span class="lesson-badge badge-live">Live</span></div>
-              <div class="lesson-row"><div class="lesson-icon lock">🔒</div><div class="lesson-name">Discriminant & Roots</div><span class="lesson-badge badge-lock">Locked</span></div>
-            </div>
-          </div>
-        </div>
         <div class="float-badge fb-right">🏆 <span style="color:var(--gold);">Top Rated 4.9★</span></div>
       </div>
     </div>
@@ -303,22 +293,6 @@ footer{ background:var(--bg);border-top:1px solid var(--border); padding:60px 5%
           <button class="cc-btn" onclick="loadYT('2Vv-BfVoq4g')">Reactions</button>
         </div>
       </div>
-<section class="subjects" id="subjects">
-  <div class="container">
-    <div class="sec-head reveal">
-      <div class="sec-label">// What We Teach</div>
-      <div class="sec-title">Explore Subjects</div>
-      <p class="sec-sub">From Class 6 to Class 12 — all subjects covered with expert-level depth and clarity.</p>
-    </div>
-    <div class="subjects-grid">
-      <div class="sub-card reveal"><span class="sub-icon">📐</span><div class="sub-name">Mathematics</div><div class="sub-count">42 lessons</div><span class="sub-tag">Class 6–12</span></div>
-      <div class="sub-card reveal" style="transition-delay:0.1s"><span class="sub-icon">⚗️</span><div class="sub-name">Science</div><div class="sub-count">38 lessons</div><span class="sub-tag">Class 8–10</span></div>
-      <div class="sub-card reveal" style="transition-delay:0.15s"><span class="sub-icon">⚡</span><div class="sub-name">Physics</div><div class="sub-count">35 lessons</div><span class="sub-tag">Class 11–12</span></div>
-      <div class="sub-card reveal" style="transition-delay:0.2s"><span class="sub-icon">🧪</span><div class="sub-name">Chemistry</div><div class="sub-count">30 lessons</div><span class="sub-tag">Class 11–12</span></div>
-      <div class="sub-card reveal" style="transition-delay:0.25s"><span class="sub-icon">🧬</span><div class="sub-name">Biology</div><div class="sub-count">28 lessons</div><span class="sub-tag">Class 11–12</span></div>
-      <div class="sub-card reveal" style="transition-delay:0.3s"><span class="sub-icon">📖</span><div class="sub-name">English</div><div class="sub-count">20 lessons</div><span class="sub-tag">All Classes</span></div>
-    </div>
-  </div>
 </section>
 <section id="courses">
   <div class="container">
@@ -382,7 +356,9 @@ footer{ background:var(--bg);border-top:1px solid var(--border); padding:60px 5%
   <div class="container">
     <div class="tutor-inner">
       <div class="tutor-visual reveal">
-        <div class="tutor-avatar">🧑‍🏫</div>
+        <div class="tutor-avatar">
+  <img src="images/tutor.jpg" alt="Aquib Khan">
+</div>
         <div class="tutor-name">Aquib Khan</div>
         <div class="tutor-role">⭐ FOUNDER & HEAD TUTOR</div>
         <p style="font-size:14px;color:var(--muted);line-height:1.6;">Passionate educator with 8+ years of experience turning confused students into confident toppers.</p>
@@ -397,7 +373,7 @@ footer{ background:var(--bg);border-top:1px solid var(--border); padding:60px 5%
         <p>At DNA Classes, I personally teach every batch. No outsourcing, no junior teachers for core subjects. Just me, your concepts, and a proven system that gets results.</p>
         <p style="color:var(--gold);font-style:italic;font-size:15px;">"Every student can score 90%+ — they just need the right teacher."</p>
         <div class="tutor-stats-row">
-          <div class="ts-item"><div class="ts-num">8+</div><div class="ts-label">Years Teaching</div></div>
+          <div class="ts-item"><div class="ts-num">12+</div><div class="ts-label">Years Teaching</div></div>
           <div class="ts-item"><div class="ts-num">2,400+</div><div class="ts-label">Students Taught</div></div>
           <div class="ts-item"><div class="ts-num">98%</div><div class="ts-label">Board Pass Rate</div></div>
         </div>
@@ -419,19 +395,7 @@ footer{ background:var(--bg);border-top:1px solid var(--border); padding:60px 5%
     </div>
   </div>
 </section>
-<section class="cta-banner">
-  <div class="container" style="position:relative;z-index:1;">
-    <div class="reveal">
-      <div class="sec-label" style="justify-content:center;display:block;text-align:center;">// Start Today</div>
-      <h2>Your Best Score is<br/>One Enrollment Away</h2>
-      <p>Join free today. No credit card needed. Cancel anytime.</p>
-      <div class="cta-form">
-        <input class="cta-input" type="text" placeholder="Enter your mobile number"/>
-        <a href="register.html" class="btn-primary">Get Free Access →</a>
-      </div>
-      <p style="font-size:12px;color:var(--muted);margin-top:14px;">📞 Or call us: <a href="tel:+919876543210" style="color:var(--gold);text-decoration:none;">+91 98765 43210</a></p>
-    </div>
-  </div>
+
 </section>
     </div>
   </div>
