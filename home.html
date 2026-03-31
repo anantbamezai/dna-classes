@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DNA Classes – Learn with Aquib Khan</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #0a0f1a; --bg2: #0e1625; --card: #111827;
+  --border: rgba(255,255,255,0.07); --gold: #f5c842; --gold2: #e8a020;
+  --blue: #3b82f6; --text: #f0f4ff; --muted: #6b7fa3; --green: #22c55e; --red: #ef4444;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{ background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; font-weight:400; overflow-x:hidden; cursor:none; }
+.cursor{ position:fixed;width:12px;height:12px; background:var(--gold);border-radius:50%; pointer-events:none;z-index:9999; transition:transform 0.15s,opacity 0.15s; transform:translate(-50%,-50%); }
+.cursor-ring{ position:fixed;width:36px;height:36px; border:1.5px solid rgba(245,200,66,0.4); border-radius:50%;pointer-events:none;z-index:9998; transition:transform 0.35s cubic-bezier(.25,.46,.45,.94),opacity 0.3s; transform:translate(-50%,-50%); }
+.bg-grid{ position:fixed;inset:0;z-index:0; background-image: linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px), linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px); background-size:60px 60px; mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 100%); }
+.bg-glow{ position:fixed;inset:0;z-index:0;pointer-events:none; background: radial-gradient(ellipse 50% 40% at 20% 30%, rgba(245,200,66,0.06) 0%,transparent 70%), radial-gradient(ellipse 40% 40% at 80% 70%, rgba(59,130,246,0.07) 0%,transparent 70%); }
+nav{ position:fixed;top:0;left:0;right:0;z-index:100; padding:18px 5%; display:flex;align-items:center;justify-content:space-between; background:rgba(10,15,26,0.75); backdrop-filter:blur(20px); border-bottom:1px solid var(--border); transition:padding 0.3s; }
+.nav-logo{ font-family:'Playfair Display',serif; font-size:24px;font-weight:900; display:flex;align-items:center;gap:6px; text-decoration:none;color:var(--text); }
+.logo-dna{ color:var(--gold); position:relative; }
+.logo-dna::after{ content:'';position:absolute;bottom:-2px;left:0;right:0;height:2px; background:var(--gold);border-radius:2px; }
+.nav-links{display:flex;align-items:center;gap:32px;}
+.nav-links a{ color:var(--muted);font-size:14px;font-weight:500; text-decoration:none;transition:color 0.2s;letter-spacing:0.3px; }
+.nav-links a:hover{color:var(--text);}
+.nav-cta{ background:var(--gold);color:#0a0f1a; padding:10px 22px;border-radius:8px;font-weight:600; font-size:14px;text-decoration:none; transition:background 0.2s,transform 0.15s,box-shadow 0.2s; box-shadow:0 4px 20px rgba(245,200,66,0.25); }
+.nav-cta:hover{background:var(--gold2);transform:translateY(-1px);box-shadow:0 6px 28px rgba(245,200,66,0.35);}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;}
+.hamburger span{width:24px;height:2px;background:var(--text);border-radius:2px;transition:0.3s;}
+.mobile-menu{ display:none;position:fixed;top:65px;left:0;right:0;z-index:99; background:rgba(10,15,26,0.97);backdrop-filter:blur(20px); padding:24px 5%;border-bottom:1px solid var(--border); flex-direction:column;gap:20px; }
+.mobile-menu.open{display:flex;}
+.mobile-menu a{color:var(--muted);font-size:16px;text-decoration:none;padding:8px 0;border-bottom:1px solid var(--border);}
+.hero{ min-height:100vh;display:flex;align-items:center; position:relative;z-index:1; padding:120px 5% 80px; }
+.hero-inner{ max-width:1200px;margin:0 auto;width:100%; display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center; }
+.hero-badge{ display:inline-flex;align-items:center;gap:8px; background:rgba(245,200,66,0.1); border:1px solid rgba(245,200,66,0.25); border-radius:100px;padding:7px 16px; font-size:12px;font-weight:600;color:var(--gold); letter-spacing:1.5px;text-transform:uppercase;margin-bottom:24px; }
+.badge-dot{width:6px;height:6px;background:var(--gold);border-radius:50%;animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.hero h1{ font-family:'Playfair Display',serif; font-size:clamp(40px,5vw,68px); font-weight:900;line-height:1.08; letter-spacing:-1.5px; margin-bottom:20px; }
+.hero h1 em{ font-style:normal;color:var(--gold); position:relative;display:inline-block; }
+.hero h1 em::after{ content:'';position:absolute;bottom:4px;left:0;right:0;height:3px; background:linear-gradient(90deg,var(--gold),var(--gold2)); border-radius:2px;opacity:0.6; }
+.hero-sub{ font-size:17px;color:var(--muted);line-height:1.7; margin-bottom:36px;max-width:480px; }
+.hero-sub strong{color:var(--text);}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;}
+.btn-primary{ background:var(--gold);color:#0a0f1a; padding:14px 30px;border-radius:10px;font-weight:700; font-size:15px;text-decoration:none;border:none;cursor:pointer; transition:all 0.2s;box-shadow:0 4px 24px rgba(245,200,66,0.3); display:inline-flex;align-items:center;gap:8px; }
+.btn-primary:hover{background:var(--gold2);transform:translateY(-2px);box-shadow:0 8px 32px rgba(245,200,66,0.4);}
+.btn-secondary{ background:transparent;color:var(--text); padding:14px 30px;border-radius:10px;font-weight:600; font-size:15px;text-decoration:none;border:1px solid var(--border);cursor:pointer; transition:all 0.2s;display:inline-flex;align-items:center;gap:8px; }
+.btn-secondary:hover{border-color:rgba(255,255,255,0.25);background:rgba(255,255,255,0.04);}
+.hero-stats{ display:flex;gap:32px;margin-top:44px;padding-top:32px; border-top:1px solid var(--border); }
+.hstat-num{ font-family:'Playfair Display',serif; font-size:30px;font-weight:900;color:var(--gold); }
+.hstat-label{font-size:12px;color:var(--muted);margin-top:2px;}
+.hero-visual{position:relative;}
+.hero-card{ background:var(--card); border:1px solid var(--border); border-radius:20px;overflow:hidden; box-shadow:0 32px 80px rgba(0,0,0,0.5); animation:float 6s ease-in-out infinite; }
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.hcard-top{ background:linear-gradient(135deg,#1a2540,#0e1625); padding:28px 28px 20px; border-bottom:1px solid var(--border); }
+.hcard-subject{ font-size:11px;font-weight:600;color:var(--gold); letter-spacing:2px;text-transform:uppercase;margin-bottom:10px; }
+.hcard-title{ font-family:'Playfair Display',serif; font-size:22px;font-weight:700;margin-bottom:8px; }
+.hcard-tutor{font-size:13px;color:var(--muted);}
+.hcard-tutor span{color:var(--text);font-weight:600;}
+.hcard-body{padding:24px 28px;}
+.progress-label{ display:flex;justify-content:space-between; font-size:12px;color:var(--muted);margin-bottom:8px; }
+.progress-bar{ height:5px;background:rgba(255,255,255,0.07);border-radius:10px; margin-bottom:20px;overflow:hidden; }
+.progress-fill{ height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2)); border-radius:10px;width:68%;animation:grow 2s 0.5s both; }
+@keyframes grow{from{width:0}to{width:68%}}
+.hcard-lessons{display:flex;flex-direction:column;gap:10px;}
+.lesson-row{ display:flex;align-items:center;gap:12px; padding:10px 14px;border-radius:10px; background:rgba(255,255,255,0.03); font-size:13px;transition:background 0.2s; }
+.lesson-row:hover{background:rgba(255,255,255,0.06);}
+.lesson-icon{ width:30px;height:30px;border-radius:8px; display:flex;align-items:center;justify-content:center; font-size:14px;flex-shrink:0; }
+.lesson-icon.done{background:rgba(34,197,94,0.15);}
+.lesson-icon.active{background:rgba(245,200,66,0.15);}
+.lesson-icon.lock{background:rgba(255,255,255,0.05);}
+.lesson-name{flex:1;}
+.lesson-badge{ font-size:10px;font-weight:600;padding:2px 8px;border-radius:100px; }
+.badge-done{background:rgba(34,197,94,0.15);color:var(--green);}
+.badge-live{background:rgba(245,200,66,0.15);color:var(--gold);animation:blink 1.5s infinite;}
+.badge-lock{background:rgba(255,255,255,0.05);color:var(--muted);}
+.float-badge{ position:absolute;background:var(--card); border:1px solid var(--border);border-radius:12px; padding:10px 16px;font-size:12px;font-weight:600; box-shadow:0 8px 32px rgba(0,0,0,0.4); display:flex;align-items:center;gap:8px; white-space:nowrap; }
+.fb-left{left:-60px;top:20%;animation:float2 5s 1s ease-in-out infinite;}
+.fb-right{right:-40px;bottom:25%;animation:float2 5s ease-in-out infinite;}
+@keyframes float2{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+section{position:relative;z-index:1;padding:100px 5%;}
+.container{max-width:1200px;margin:0 auto;width:100%;}
+.sec-label{ font-size:11px;font-weight:600;letter-spacing:3px; text-transform:uppercase;color:var(--gold);margin-bottom:10px; }
+.sec-title{ font-family:'Playfair Display',serif; font-size:clamp(28px,3.5vw,44px);font-weight:900; letter-spacing:-1px;margin-bottom:14px; }
+.sec-sub{font-size:16px;color:var(--muted);max-width:520px;line-height:1.7;}
+.sec-head{margin-bottom:56px;}
+.subjects{background:var(--bg2);}
+.subjects-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:16px; }
+.sub-card{ background:var(--card);border:1px solid var(--border); border-radius:16px;padding:28px 22px; text-align:center;transition:all 0.25s;cursor:pointer; position:relative;overflow:hidden; }
+.sub-card:hover{transform:translateY(-5px);border-color:rgba(245,200,66,0.3);}
+.sub-icon{font-size:36px;margin-bottom:14px;display:block;}
+.sub-name{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;margin-bottom:6px;}
+.sub-count{font-size:12px;color:var(--muted);}
+.sub-tag{ display:inline-block;margin-top:12px; font-size:10px;font-weight:600;padding:3px 10px;border-radius:100px; background:rgba(245,200,66,0.1);color:var(--gold); border:1px solid rgba(245,200,66,0.2); }
+.courses-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:24px; }
+.course-card{ background:var(--card);border:1px solid var(--border); border-radius:20px;overflow:hidden; transition:all 0.25s; }
+.course-card:hover{transform:translateY(-6px);border-color:rgba(245,200,66,0.25);box-shadow:0 20px 60px rgba(0,0,0,0.4);}
+.course-thumb{ height:160px;display:flex;align-items:center;justify-content:center; font-size:52px;position:relative;overflow:hidden; }
+.course-thumb::after{ content:'';position:absolute;inset:0; background:linear-gradient(to bottom,transparent 40%,var(--card)); }
+.cc-body{padding:22px;}
+.cc-meta{ display:flex;gap:8px;align-items:center;margin-bottom:12px; flex-wrap:wrap; }
+.cc-badge{ font-size:10px;font-weight:600;padding:3px 10px;border-radius:100px; border:1px solid; }
+.badge-free{background:rgba(34,197,94,0.1);color:var(--green);border-color:rgba(34,197,94,0.3);}
+.badge-paid{background:rgba(245,200,66,0.1);color:var(--gold);border-color:rgba(245,200,66,0.3);}
+.badge-live{background:rgba(239,68,68,0.1);color:var(--red);border-color:rgba(239,68,68,0.3);}
+.cc-title{ font-family:'Playfair Display',serif; font-size:18px;font-weight:700;margin-bottom:8px;line-height:1.3; }
+.cc-desc{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px;}
+.cc-footer{ display:flex;align-items:center;justify-content:space-between; padding-top:16px;border-top:1px solid var(--border); }
+.cc-price{font-family:'Playfair Display',serif;font-size:20px;font-weight:900;color:var(--gold);}
+.cc-price span{font-size:12px;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:400;text-decoration:line-through;margin-left:6px;}
+.cc-btn{ background:var(--gold);color:#0a0f1a; padding:9px 18px;border-radius:8px; font-size:13px;font-weight:700;cursor:pointer; border:none;transition:all 0.2s;text-decoration:none; }
+.cc-btn:hover{background:var(--gold2);}
+.cc-info{ display:flex;gap:16px;margin-bottom:16px; }
+.cc-info-item{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:5px;}
+.why{background:var(--bg2);}
+.why-grid{ display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:20px; }
+.why-card{ background:var(--card);border:1px solid var(--border); border-radius:18px;padding:30px 26px; transition:all 0.25s; }
+.why-card:hover{border-color:rgba(245,200,66,0.25);transform:translateY(-4px);}
+.why-icon{ width:52px;height:52px;border-radius:14px; background:rgba(245,200,66,0.1);border:1px solid rgba(245,200,66,0.2); display:flex;align-items:center;justify-content:center; font-size:24px;margin-bottom:18px; }
+.why-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;margin-bottom:8px;}
+.why-text{font-size:14px;color:var(--muted);line-height:1.7;}
+.tutor-section{ background:linear-gradient(135deg,rgba(245,200,66,0.04),rgba(59,130,246,0.04)); }
+.tutor-inner{ display:grid;grid-template-columns:1fr 1.5fr;gap:60px;align-items:center; }
+.tutor-visual{ background:var(--card);border:1px solid var(--border); border-radius:24px;overflow:hidden;text-align:center; padding:40px 32px; }
+.tutor-avatar{ width:120px;height:120px;border-radius:50%; background:linear-gradient(135deg,var(--gold),var(--gold2)); display:flex;align-items:center;justify-content:center; font-size:48px;margin:0 auto 20px; box-shadow:0 0 0 6px rgba(245,200,66,0.15),0 0 0 12px rgba(245,200,66,0.06); }
+.tutor-name{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;margin-bottom:4px;}
+.tutor-role{font-size:13px;color:var(--gold);font-weight:600;letter-spacing:1px;margin-bottom:20px;}
+.tutor-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px;}
+.chip{ font-size:11px;font-weight:600;padding:5px 12px;border-radius:100px; background:rgba(255,255,255,0.05);color:var(--muted);border:1px solid var(--border); }
+.tutor-text h2{font-family:'Playfair Display',serif;font-size:36px;font-weight:900;letter-spacing:-1px;margin-bottom:18px;}
+.tutor-text p{font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:14px;}
+.tutor-stats-row{display:flex;gap:28px;margin-top:28px;flex-wrap:wrap;}
+.ts-item{text-align:left;}
+.ts-num{font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:var(--gold);}
+.ts-label{font-size:12px;color:var(--muted);margin-top:2px;}
+.testimonials{background:var(--bg2);}
+.test-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;}
+.test-card{ background:var(--card);border:1px solid var(--border); border-radius:18px;padding:28px;transition:all 0.25s; }
+.test-card:hover{border-color:rgba(245,200,66,0.2);transform:translateY(-3px);}
+.stars{color:var(--gold);font-size:14px;margin-bottom:14px;letter-spacing:2px;}
+.test-quote{font-size:14px;color:#9db3cc;line-height:1.8;margin-bottom:20px;font-style:italic;}
+.test-author{display:flex;align-items:center;gap:12px;}
+.test-avatar{ width:40px;height:40px;border-radius:50%; display:flex;align-items:center;justify-content:center;font-size:18px; background:rgba(245,200,66,0.1);border:1px solid rgba(245,200,66,0.2); flex-shrink:0; }
+.test-name{font-weight:600;font-size:14px;}
+.test-class{font-size:12px;color:var(--muted);}
+.cta-banner{ background:linear-gradient(135deg,#1a2540 0%,#0e1625 100%); border-top:1px solid var(--border);border-bottom:1px solid var(--border); padding:80px 5%;text-align:center;position:relative;overflow:hidden; }
+.cta-banner::before{ content:'';position:absolute; width:600px;height:600px;border-radius:50%; background:radial-gradient(circle,rgba(245,200,66,0.08) 0%,transparent 70%); top:50%;left:50%;transform:translate(-50%,-50%); pointer-events:none; }
+.cta-banner h2{ font-family:'Playfair Display',serif; font-size:clamp(28px,4vw,52px);font-weight:900; letter-spacing:-1px;margin-bottom:14px; }
+.cta-banner p{font-size:17px;color:var(--muted);margin-bottom:32px;}
+.cta-form{ display:flex;gap:12px;max-width:460px;margin:0 auto;flex-wrap:wrap;justify-content:center; }
+.cta-input{ flex:1;min-width:220px;padding:14px 18px; border-radius:10px;border:1px solid var(--border); background:rgba(255,255,255,0.05);color:var(--text); font-size:15px;outline:none;font-family:'DM Sans',sans-serif; transition:border-color 0.2s; }
+.cta-input:focus{border-color:rgba(245,200,66,0.5);}
+.cta-input::placeholder{color:var(--muted);}
+footer{ background:var(--bg);border-top:1px solid var(--border); padding:60px 5% 32px;position:relative;z-index:1; }
+.footer-inner{ max-width:1200px;margin:0 auto; display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px; }
+.footer-brand .logo{ font-family:'Playfair Display',serif;font-size:22px;font-weight:900; color:var(--text);display:inline-block;margin-bottom:14px; }
+.footer-brand .logo span{color:var(--gold);}
+.footer-desc{font-size:14px;color:var(--muted);line-height:1.7;max-width:260px;}
+.footer-col h4{ font-size:13px;font-weight:600;color:var(--text); letter-spacing:1px;text-transform:uppercase;margin-bottom:18px; }
+.footer-col a{ display:block;font-size:14px;color:var(--muted); text-decoration:none;margin-bottom:10px;transition:color 0.2s; }
+.footer-col a:hover{color:var(--gold);}
+.footer-bottom{ border-top:1px solid var(--border);padding-top:24px; display:flex;justify-content:space-between;align-items:center; flex-wrap:wrap;gap:12px;max-width:1200px;margin:0 auto; }
+.footer-bottom p{font-size:13px;color:var(--muted);}
+.footer-socials{display:flex;gap:12px;}
+.social-btn{ width:36px;height:36px;border-radius:8px; background:rgba(255,255,255,0.05);border:1px solid var(--border); display:flex;align-items:center;justify-content:center; font-size:16px;cursor:pointer;transition:all 0.2s;text-decoration:none; }
+.social-btn:hover{background:rgba(245,200,66,0.1);border-color:rgba(245,200,66,0.3);}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 0.7s,transform 0.7s;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.live-bar{ background:rgba(239,68,68,0.1);border-bottom:1px solid rgba(239,68,68,0.2); padding:10px 5%;display:flex;align-items:center;gap:16px; overflow:hidden;position:fixed;top:65px;left:0;right:0;z-index:99; }
+.live-label{ background:var(--red);color:white;font-size:10px;font-weight:700; padding:3px 10px;border-radius:4px;letter-spacing:1.5px;flex-shrink:0; }
+.ticker-wrap{overflow:hidden;flex:1;}
+.ticker{ display:flex;gap:60px;white-space:nowrap; animation:ticker 20s linear infinite;font-size:13px;color:#f87171; }
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media(max-width:900px){ .hero-inner{grid-template-columns:1fr;} .hero-visual{display:none;} .tutor-inner{grid-template-columns:1fr;} .footer-inner{grid-template-columns:1fr 1fr;} .nav-links{display:none;} .hamburger{display:flex;} }
+@media(max-width:600px){ section{padding:70px 5%;} .hero-stats{flex-wrap:wrap;gap:20px;} .footer-inner{grid-template-columns:1fr;} .live-bar{display:none;} nav{padding:14px 5%;} }
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+<div class="live-bar">
+  <span class="live-label">🔴 LIVE</span>
+  <div class="ticker-wrap">
+    <div class="ticker">
+      <span>🎓 Class 10 Maths — Chapter 6: Triangles starting NOW &nbsp;•&nbsp;</span>
+      <span>📢 THIS WEBSITE IS STILL UNDER DEVELOPMENT &nbsp;•&nbsp;</span>
+      <span>📢 New batch starting on 1st April 2026 &nbsp;•&nbsp;</span>
+      <span>📢 For More Info Contact:-9103838624 &nbsp;•&nbsp;</span>
+      <span>📚 Free demo class every Saturday 10 AM  &nbsp;•&nbsp;</span>
+    </div>
+  </div>
+</div>
+<nav id="navbar">
+  <a href="#" class="nav-logo"><span class="logo-dna">DNA</span> Classes</a>
+  <div class="nav-links">
+    <a href="#videos">Video Classes</a>
+    <a href="#subjects">Subjects</a>
+    <a href="#courses">Courses</a>
+    <a href="#tutor">About Aquib Sir</a>
+    <a href="#testimonials">Reviews</a>
+    <a href="login.html">Login</a>
+  </div>
+  <a href="register.html" class="nav-cta">Enroll Free →</a>
+  <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#subjects">Subjects</a>
+  <a href="#courses">Courses</a>
+  <a href="#tutor">About Aquib Sir</a>
+  <a href="#testimonials">Reviews</a>
+  <a href="login.html">Login</a>
+  <a href="register.html" class="btn-primary" style="text-align:center;">Enroll Free →</a>
+</div>
+<section class="hero" id="home">
+  <div class="hero-inner">
+    <div class="hero-content reveal">
+      <div class="hero-badge"><span class="badge-dot"></span> India's Fastest Growing Tuition Center</div>
+      <h1>Master Every<br/>Subject with<br/><em>Aquib Khan</em></h1>
+      <p class="hero-sub">Join <strong>DNA Classes</strong> — where expert teaching meets technology. Live classes, recorded videos, quizzes & personal mentorship. <strong>Results guaranteed.</strong></p>
+      <div class="hero-btns">
+        <a href="register.html" class="btn-primary">🚀 Start Learning Free</a>
+        <a href="#courses" class="btn-secondary">📚 Browse Courses</a>
+      </div>
+      <div class="hero-stats">
+        <div><div class="hstat-num">2,400+</div><div class="hstat-label">Students Enrolled</div></div>
+        <div><div class="hstat-num">98%</div><div class="hstat-label">Pass Rate</div></div>
+        <div><div class="hstat-num">150+</div><div class="hstat-label">Video Lessons</div></div>
+      </div>
+    </div>
+    <div class="hero-visual reveal" style="transition-delay:0.2s">
+      <div style="position:relative;">
+        <div class="float-badge fb-left">🔴 <span style="color:#f87171;">LIVE NOW</span></div>
+        <div class="hero-card">
+          <div class="hcard-top">
+            <div class="hcard-subject">📐 Mathematics • Class 10</div>
+            <div class="hcard-title">Quadratic Equations</div>
+            <div class="hcard-tutor">by <span>Aquib Khan Sir</span></div>
+          </div>
+          <div class="hcard-body">
+            <div class="progress-label"><span>Course Progress</span><span style="color:var(--gold)">68%</span></div>
+            <div class="progress-bar"><div class="progress-fill"></div></div>
+            <div class="hcard-lessons">
+              <div class="lesson-row"><div class="lesson-icon done">✅</div><div class="lesson-name">Introduction to Polynomials</div><span class="lesson-badge badge-done">Done</span></div>
+              <div class="lesson-row"><div class="lesson-icon active">▶️</div><div class="lesson-name">Quadratic Formula</div><span class="lesson-badge badge-live">Live</span></div>
+              <div class="lesson-row"><div class="lesson-icon lock">🔒</div><div class="lesson-name">Discriminant & Roots</div><span class="lesson-badge badge-lock">Locked</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="float-badge fb-right">🏆 <span style="color:var(--gold);">Top Rated 4.9★</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+<section id="videos" class="why">
+  <div class="container">
+    <div class="sec-head">
+      <div class="sec-label">// Video Classes</div>
+      <div class="sec-title">Course-wise Learning</div>
+      <p class="sec-sub">Select a course and start learning chapter by chapter.</p>
+    </div>
+
+    <!-- PLAYER -->
+    <div class="course-card" style="padding:20px; margin-bottom:30px;">
+      <iframe id="ytPlayer"
+        width="100%" height="400"
+        src="https://www.youtube.com/embed/5MgBikgcWnY">
+      </iframe>
+    </div>
+
+    <!-- COURSES -->
+    <div class="courses-grid">
+
+      <!-- MATH -->
+      <div class="course-card">
+        <div class="cc-body">
+          <div class="cc-title">📐 CLASS 12TH</div>
+
+          <button class="cc-btn" onclick="loadYT('5MgBikgcWnY')">Chapter 1</button>
+          <button class="cc-btn" onclick="loadYT('kJQP7kiw5Fk')">Chapter 2</button>
+          <button class="cc-btn" onclick="loadYT('3JZ_D3ELwOQ')">Chapter 3</button>
+        </div>
+      </div>
+
+      <!-- PHYSICS -->
+      <div class="course-card">
+        <div class="cc-body">
+          <div class="cc-title">⚡ CLASS 11TH</div>
+
+          <button class="cc-btn" onclick="loadYT('aqz-KE-bpKQ')">Motion</button>
+          <button class="cc-btn" onclick="loadYT('ysz5S6PUM-U')">Laws of Motion</button>
+        </div>
+      </div>
+
+      <!-- CLASS 10TH -->
+      <div class="course-card">
+        <div class="cc-body">
+          <div class="cc-title">🧪 CLASS 10TH</div>
+
+          <button class="cc-btn" onclick="loadYT('V-_O7nl0Ii0')">Atoms</button>
+          <button class="cc-btn" onclick="loadYT('2Vv-BfVoq4g')">Reactions</button>
+        </div>
+      </div>
+<section class="subjects" id="subjects">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="sec-label">// What We Teach</div>
+      <div class="sec-title">Explore Subjects</div>
+      <p class="sec-sub">From Class 6 to Class 12 — all subjects covered with expert-level depth and clarity.</p>
+    </div>
+    <div class="subjects-grid">
+      <div class="sub-card reveal"><span class="sub-icon">📐</span><div class="sub-name">Mathematics</div><div class="sub-count">42 lessons</div><span class="sub-tag">Class 6–12</span></div>
+      <div class="sub-card reveal" style="transition-delay:0.1s"><span class="sub-icon">⚗️</span><div class="sub-name">Science</div><div class="sub-count">38 lessons</div><span class="sub-tag">Class 8–10</span></div>
+      <div class="sub-card reveal" style="transition-delay:0.15s"><span class="sub-icon">⚡</span><div class="sub-name">Physics</div><div class="sub-count">35 lessons</div><span class="sub-tag">Class 11–12</span></div>
+      <div class="sub-card reveal" style="transition-delay:0.2s"><span class="sub-icon">🧪</span><div class="sub-name">Chemistry</div><div class="sub-count">30 lessons</div><span class="sub-tag">Class 11–12</span></div>
+      <div class="sub-card reveal" style="transition-delay:0.25s"><span class="sub-icon">🧬</span><div class="sub-name">Biology</div><div class="sub-count">28 lessons</div><span class="sub-tag">Class 11–12</span></div>
+      <div class="sub-card reveal" style="transition-delay:0.3s"><span class="sub-icon">📖</span><div class="sub-name">English</div><div class="sub-count">20 lessons</div><span class="sub-tag">All Classes</span></div>
+    </div>
+  </div>
+</section>
+<section id="courses">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="sec-label">// Our Courses</div>
+      <div class="sec-title">Popular Courses</div>
+      <p class="sec-sub">Hand-crafted courses by Aquib Khan Sir — structured, detailed, and results-focused.</p>
+    </div>
+    <div class="courses-grid">
+      <div class="course-card reveal">
+        <div class="course-thumb" style="background:linear-gradient(135deg,#1a2f1a,#0f1a0f)">📐</div>
+        <div class="cc-body">
+          <div class="cc-meta"><span class="cc-badge badge-paid">PAID</span><span class="cc-badge" style="background:rgba(59,130,246,0.1);color:#60a5fa;border-color:rgba(59,130,246,0.3);">CLASS 10</span></div>
+          <div class="cc-title">Complete Maths Mastery — Class 10 CBSE</div>
+          <div class="cc-info"><span class="cc-info-item">📹 42 videos</span><span class="cc-info-item">⏱ 60 hrs</span><span class="cc-info-item">⭐ 4.9</span></div>
+          <div class="cc-desc">Every chapter from NCERT with extra practice, shortcuts, and board exam strategies.</div>
+          <div class="cc-footer"><div class="cc-price">₹1,999 <span>₹4,999</span></div><a href="register.html" class="cc-btn">Enroll Now</a></div>
+        </div>
+      </div>
+      <div class="course-card reveal" style="transition-delay:0.1s">
+        <div class="course-thumb" style="background:linear-gradient(135deg,#1f1a2e,#0f0f1f)">⚡</div>
+        <div class="cc-body">
+          <div class="cc-meta"><span class="cc-badge badge-live">🔴 LIVE</span><span class="cc-badge" style="background:rgba(59,130,246,0.1);color:#60a5fa;border-color:rgba(59,130,246,0.3);">CLASS 12</span></div>
+          <div class="cc-title">Physics for JEE & NEET — Class 12</div>
+          <div class="cc-info"><span class="cc-info-item">📹 35 videos</span><span class="cc-info-item">⏱ 55 hrs</span><span class="cc-info-item">⭐ 4.8</span></div>
+          <div class="cc-desc">Live batch with doubt clearing, DPPs, and mock tests. Limited seats available!</div>
+          <div class="cc-footer"><div class="cc-price">₹2,499 <span>₹5,999</span></div><a href="register.html" class="cc-btn">Join Batch</a></div>
+        </div>
+      </div>
+      <div class="course-card reveal" style="transition-delay:0.2s">
+        <div class="course-thumb" style="background:linear-gradient(135deg,#1a1f10,#101508)">🧪</div>
+        <div class="cc-body">
+          <div class="cc-meta"><span class="cc-badge badge-free">FREE</span><span class="cc-badge" style="background:rgba(59,130,246,0.1);color:#60a5fa;border-color:rgba(59,130,246,0.3);">CLASS 9</span></div>
+          <div class="cc-title">Science Crash Course — Class 9 Basics</div>
+          <div class="cc-info"><span class="cc-info-item">📹 15 videos</span><span class="cc-info-item">⏱ 12 hrs</span><span class="cc-info-item">⭐ 4.7</span></div>
+          <div class="cc-desc">Start for free! Perfect introduction to Class 9 Science covering all 3 branches.</div>
+          <div class="cc-footer"><div class="cc-price" style="color:var(--green);">FREE</div><a href="register.html" class="cc-btn" style="background:var(--green);">Start Free</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="why">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="sec-label">// Why DNA Classes</div>
+      <div class="sec-title">What Makes Us Different</div>
+      <p class="sec-sub">We don't just teach — we build confidence, clarity, and a love for learning.</p>
+    </div>
+    <div class="why-grid">
+      <div class="why-card reveal"><div class="why-icon">🔴</div><div class="why-title">Live Interactive Classes</div><div class="why-text">Real-time classes with Aquib Khan Sir where you can ask questions, get instant answers, and never feel left behind.</div></div>
+      <div class="why-card reveal" style="transition-delay:0.1s"><div class="why-icon">📹</div><div class="why-title">Recorded Video Library</div><div class="why-text">Miss a class? Watch recordings anytime. Rewind, pause, replay — learn at your own pace without pressure.</div></div>
+      <div class="why-card reveal" style="transition-delay:0.15s"><div class="why-icon">📝</div><div class="why-title">Tests & Assignments</div><div class="why-text">Regular chapter tests, full mock exams, and assignments to track your progress and exam readiness.</div></div>
+      <div class="why-card reveal" style="transition-delay:0.2s"><div class="why-icon">👨‍👩‍👧</div><div class="why-title">Parent Tracking Portal</div><div class="why-text">Parents can track attendance, test scores, and progress anytime through a dedicated dashboard.</div></div>
+      <div class="why-card reveal" style="transition-delay:0.25s"><div class="why-icon">💬</div><div class="why-title">Doubt Solving</div><div class="why-text">Ask doubts directly in class or via our doubt portal. Every question gets answered — guaranteed.</div></div>
+      <div class="why-card reveal" style="transition-delay:0.3s"><div class="why-icon">📱</div><div class="why-title">Study Anywhere</div><div class="why-text">Access your courses on mobile, tablet, or PC. Study on the bus, at home, or before exams — it's all there.</div></div>
+    </div>
+  </div>
+</section>
+<section class="tutor-section" id="tutor">
+  <div class="container">
+    <div class="tutor-inner">
+      <div class="tutor-visual reveal">
+        <div class="tutor-avatar">🧑‍🏫</div>
+        <div class="tutor-name">Aquib Khan</div>
+        <div class="tutor-role">⭐ FOUNDER & HEAD TUTOR</div>
+        <p style="font-size:14px;color:var(--muted);line-height:1.6;">Passionate educator with 8+ years of experience turning confused students into confident toppers.</p>
+        <div class="tutor-chips">
+          <span class="chip">Mathematics</span><span class="chip">Physics</span><span class="chip">CBSE Expert</span><span class="chip">JEE Mentor</span><span class="chip">NEET Guide</span>
+        </div>
+      </div>
+      <div class="tutor-text reveal" style="transition-delay:0.2s">
+        <div class="sec-label">// Meet Your Mentor</div>
+        <h2>Teaching That<br/>Actually Works</h2>
+        <p>Hi, I'm <strong style="color:var(--text)">Aquib Khan</strong> — founder of DNA Classes. I started this center because I saw brilliant students failing not due to lack of intelligence, but lack of the right guidance.</p>
+        <p>At DNA Classes, I personally teach every batch. No outsourcing, no junior teachers for core subjects. Just me, your concepts, and a proven system that gets results.</p>
+        <p style="color:var(--gold);font-style:italic;font-size:15px;">"Every student can score 90%+ — they just need the right teacher."</p>
+        <div class="tutor-stats-row">
+          <div class="ts-item"><div class="ts-num">8+</div><div class="ts-label">Years Teaching</div></div>
+          <div class="ts-item"><div class="ts-num">2,400+</div><div class="ts-label">Students Taught</div></div>
+          <div class="ts-item"><div class="ts-num">98%</div><div class="ts-label">Board Pass Rate</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="testimonials" id="testimonials">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="sec-label">// Student Reviews</div>
+      <div class="sec-title">What Students Say</div>
+      <p class="sec-sub">Real results from real students who trusted DNA Classes.</p>
+    </div>
+    <div class="test-grid">
+      <div class="test-card reveal"><div class="stars">★★★★★</div><div class="test-quote">"Aquib Sir explains Maths in such a simple way. I used to fear Maths but now it's my highest scoring subject. Got 96 in boards!"</div><div class="test-author"><div class="test-avatar">👩</div><div><div class="test-name">Priya Sharma</div><div class="test-class">Class 10 · 96% in Maths</div></div></div></div>
+      <div class="test-card reveal" style="transition-delay:0.1s"><div class="stars">★★★★★</div><div class="test-quote">"The live classes are amazing. I can ask doubts any time and Sir always responds. Cleared JEE with AIR 2847 — couldn't have done it without DNA Classes."</div><div class="test-author"><div class="test-avatar">👦</div><div><div class="test-name">Rahul Verma</div><div class="test-class">JEE 2024 · AIR 2847</div></div></div></div>
+      <div class="test-card reveal" style="transition-delay:0.2s"><div class="stars">★★★★★</div><div class="test-quote">"My son's marks improved from 55% to 89% in just 4 months. The parent portal helps me track his progress daily. Highly recommend!"</div><div class="test-author"><div class="test-avatar">👨</div><div><div class="test-name">Mohd. Arif</div><div class="test-class">Parent of Class 9 Student</div></div></div></div>
+    </div>
+  </div>
+</section>
+<section class="cta-banner">
+  <div class="container" style="position:relative;z-index:1;">
+    <div class="reveal">
+      <div class="sec-label" style="justify-content:center;display:block;text-align:center;">// Start Today</div>
+      <h2>Your Best Score is<br/>One Enrollment Away</h2>
+      <p>Join free today. No credit card needed. Cancel anytime.</p>
+      <div class="cta-form">
+        <input class="cta-input" type="text" placeholder="Enter your mobile number"/>
+        <a href="register.html" class="btn-primary">Get Free Access →</a>
+      </div>
+      <p style="font-size:12px;color:var(--muted);margin-top:14px;">📞 Or call us: <a href="tel:+919876543210" style="color:var(--gold);text-decoration:none;">+91 98765 43210</a></p>
+    </div>
+  </div>
+</section>
+    </div>
+  </div>
+</section>
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="logo"><span>DNA</span> Classes</div>
+      <p class="footer-desc">Expert tuition for Class 6–12. Live classes, recorded videos, and personal mentorship by Aquib Khan Sir.</p>
+    </div>
+    <div class="footer-col"><h4>Courses</h4><a href="#">Class 9 – 10</a><a href="#">Class 11 – 12</a><a href="#">JEE Preparation</a><a href="#">NEET Preparation</a><a href="#">Free Courses</a></div>
+    <div class="footer-col"><h4>Platform</h4><a href="login.html">Student Login</a><a href="register.html">Register</a><a href="#">Live Classes</a><a href="#">Video Library</a><a href="#">Test Series</a></div>
+    <div class="footer-col"><h4>Support</h4><a href="#">Contact Us</a><a href="#">WhatsApp Us</a><a href="#">Privacy Policy</a><a href="#">Refund Policy</a><a href="#">Terms of Use</a></div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 DNA Classes · Aquib Khan · All Rights Reserved</p>
+    <div class="footer-socials">
+      <a class="social-btn" href="#">▶️</a><a class="social-btn" href="#">💬</a><a class="social-btn" href="#">📸</a><a class="social-btn" href="#">✈️</a>
+    </div>
+  </div>
+</footer>
+<script>
+const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
+function animRing(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing);}
+animRing();
+document.querySelectorAll('a,button,.sub-card,.course-card,.why-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cursor.style.transform='translate(-50%,-50%) scale(2)';ring.style.transform='translate(-50%,-50%) scale(1.5)';});
+  el.addEventListener('mouseleave',()=>{cursor.style.transform='translate(-50%,-50%) scale(1)';ring.style.transform='translate(-50%,-50%) scale(1)';});
+});
+const reveals=document.querySelectorAll('.reveal');
+new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');}),{threshold:0.12}).observe||reveals.forEach(el=>new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');}),{threshold:0.12}).observe(el));
+const obs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');}),{threshold:0.12});
+reveals.forEach(el=>obs.observe(el));
+const nav=document.getElementById('navbar');
+window.addEventListener('scroll',()=>{nav.style.padding=window.scrollY>60?'12px 5%':'18px 5%';});
+document.getElementById('hamburger').addEventListener('click',()=>document.getElementById('mobileMenu').classList.toggle('open'));
+document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{const t=document.querySelector(a.getAttribute('href'));if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'});}});});
+function loadYT(id) {
+  const yt = document.getElementById("ytPlayer");
+  const local = document.getElementById("localPlayer");
+
+  yt.style.display = "block";
+  local.style.display = "none";
+
+  yt.src = "https://www.youtube.com/embed/" + id;
+}
+
+function loadLocalVideo(path) {
+  const yt = document.getElementById("ytPlayer");
+  const local = document.getElementById("localPlayer");
+
+  yt.style.display = "none";
+  local.style.display = "block";
+
+  local.querySelector("source").src = path;
+  local.load();
+}
+function loadYT(id) {
+  const yt = document.getElementById("ytPlayer");
+  const local = document.getElementById("localPlayer");
+
+  yt.style.display = "block";
+  local.style.display = "none";
+
+  yt.src = "https://www.youtube.com/embed/" + id;
+}
+
+function loadLocalVideo(path) {
+  const yt = document.getElementById("ytPlayer");
+  const local = document.getElementById("localPlayer");
+
+  yt.style.display = "none";
+  local.style.display = "block";
+
+  local.querySelector("source").src = path;
+  local.load();
+}
+</script>
+</body>
+</html>
+<!-- VIDEO SECTION -->
+<section id="videos">
+  <div class="container">
+    <div class="sec-head">
+      <div class="sec-label">// Video Classes</div>
+      <div class="sec-title">Watch & Learn</div>
+      <p class="sec-sub">Learn using YouTube or recorded internal lectures.</p>
+    </div>
+
+    <!-- PLAYER -->
+    <div class="course-card" style="padding:20px;">
+      <iframe id="ytPlayer"
+        width="100%" height="400"
+        src="https://www.youtube.com/embed/5MgBikgcWnY"
+        frameborder="0"
+        allowfullscreen>
+      </iframe>
+
+      <video id="localPlayer" controls width="100%" height="400" style="display:none;">
+        <source src="">
+      </video>
+    </div>
+
+    <!-- VIDEO BUTTONS -->
+    <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;">
+      <button class="cc-btn" onclick="loadYT('5MgBikgcWnY')">Maths Intro</button>
+      <button class="cc-btn" onclick="loadYT('kJQP7kiw5Fk')">Example Lecture</button>
+      <button class="cc-btn" onclick="loadLocalVideo('videos/class1.mp4')">My Recorded Class</button>
+    </div>
+  </div>
+</section>
