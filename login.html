@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DNA Classes – Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#0a0f1a; --card:#111827; --border:rgba(255,255,255,0.08);
+  --gold:#f5c842; --gold2:#e8a020; --text:#f0f4ff; --muted:#6b7fa3;
+  --green:#22c55e; --red:#ef4444; --input-bg:rgba(255,255,255,0.05);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg); color:var(--text);
+  font-family:'DM Sans',sans-serif; min-height:100vh;
+  display:flex; align-items:center; justify-content:center;
+  padding:20px; overflow-x:hidden;
+}
+/* animated background */
+body::before{
+  content:''; position:fixed; inset:0; z-index:0;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 30%, rgba(245,200,66,0.07) 0%,transparent 70%),
+    radial-gradient(ellipse 50% 50% at 80% 70%, rgba(59,130,246,0.07) 0%,transparent 70%);
+}
+.bg-grid{
+  position:fixed; inset:0; z-index:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);
+  background-size:50px 50px;
+}
+
+.wrapper{
+  position:relative; z-index:1;
+  width:100%; max-width:460px;
+}
+
+/* LOGO */
+.logo{
+  text-align:center; margin-bottom:32px;
+  font-family:'Playfair Display',serif;
+  font-size:32px; font-weight:900;
+}
+.logo span{color:var(--gold);}
+.logo-sub{font-size:13px; color:var(--muted); margin-top:4px; letter-spacing:1px;}
+
+/* CARD */
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:24px;
+  padding:36px;
+  box-shadow:0 32px 80px rgba(0,0,0,0.5);
+}
+
+/* TABS */
+.tabs{
+  display:flex; gap:0;
+  background:rgba(255,255,255,0.04);
+  border-radius:12px; padding:4px;
+  margin-bottom:28px;
+}
+.tab-btn{
+  flex:1; padding:10px;
+  border:none; background:transparent;
+  color:var(--muted); font-family:'DM Sans',sans-serif;
+  font-size:14px; font-weight:600;
+  border-radius:10px; cursor:pointer;
+  transition:all 0.2s;
+}
+.tab-btn.active{
+  background:var(--gold); color:#0a0f1a;
+  box-shadow:0 4px 16px rgba(245,200,66,0.3);
+}
+
+/* FORMS */
+.form{ display:none; }
+.form.active{ display:block; }
+
+.form-group{ margin-bottom:18px; }
+label{
+  display:block; font-size:12px; font-weight:600;
+  color:var(--muted); letter-spacing:1px;
+  text-transform:uppercase; margin-bottom:8px;
+}
+input{
+  width:100%; padding:14px 16px;
+  background:var(--input-bg);
+  border:1px solid var(--border);
+  border-radius:12px; color:var(--text);
+  font-family:'DM Sans',sans-serif; font-size:15px;
+  outline:none; transition:border-color 0.2s, box-shadow 0.2s;
+}
+input:focus{
+  border-color:rgba(245,200,66,0.5);
+  box-shadow:0 0 0 3px rgba(245,200,66,0.08);
+}
+input::placeholder{ color:var(--muted); }
+
+.remember-row{
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:22px; font-size:13px;
+}
+.remember-row label{
+  display:flex; align-items:center; gap:8px;
+  color:var(--muted); font-size:13px;
+  letter-spacing:0; text-transform:none;
+  margin:0; cursor:pointer;
+}
+.remember-row input[type="checkbox"]{
+  width:16px; height:16px; accent-color:var(--gold);
+  padding:0; border-radius:4px; cursor:pointer;
+}
+.forgot{ color:var(--gold); font-size:13px; text-decoration:none; }
+.forgot:hover{ text-decoration:underline; }
+
+.btn{
+  width:100%; padding:15px;
+  background:var(--gold); color:#0a0f1a;
+  border:none; border-radius:12px;
+  font-family:'DM Sans',sans-serif;
+  font-size:16px; font-weight:700;
+  cursor:pointer; transition:all 0.2s;
+  box-shadow:0 4px 20px rgba(245,200,66,0.3);
+  letter-spacing:0.3px;
+}
+.btn:hover{
+  background:var(--gold2);
+  transform:translateY(-2px);
+  box-shadow:0 8px 28px rgba(245,200,66,0.4);
+}
+.btn:active{ transform:translateY(0); }
+
+/* DIVIDER */
+.divider{
+  display:flex; align-items:center; gap:12px;
+  margin:20px 0; color:var(--muted); font-size:12px;
+}
+.divider::before,.divider::after{
+  content:''; flex:1; height:1px;
+  background:var(--border);
+}
+
+/* GOOGLE BTN */
+.btn-google{
+  width:100%; padding:13px;
+  background:transparent;
+  border:1px solid var(--border);
+  border-radius:12px; color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  font-size:14px; font-weight:600;
+  cursor:pointer; transition:all 0.2s;
+  display:flex; align-items:center; justify-content:center; gap:10px;
+}
+.btn-google:hover{ border-color:rgba(255,255,255,0.25); background:rgba(255,255,255,0.04); }
+
+/* ALERT */
+.alert{
+  padding:12px 16px; border-radius:10px;
+  font-size:13px; margin-bottom:18px;
+  display:none;
+}
+.alert.error{ background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); color:#f87171; }
+.alert.success{ background:rgba(34,197,94,0.1); border:1px solid rgba(34,197,94,0.3); color:var(--green); }
+.alert.show{ display:block; }
+
+/* FOOTER */
+.card-footer{
+  text-align:center; margin-top:22px;
+  font-size:13px; color:var(--muted);
+}
+.card-footer a{ color:var(--gold); text-decoration:none; }
+.card-footer a:hover{ text-decoration:underline; }
+
+/* LOADING SPINNER */
+.spinner{
+  display:inline-block; width:18px; height:18px;
+  border:2px solid rgba(10,15,26,0.3);
+  border-top-color:#0a0f1a;
+  border-radius:50%;
+  animation:spin 0.7s linear infinite;
+  vertical-align:middle; margin-right:8px;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* LOGGED IN STATE */
+.logged-in-card{
+  text-align:center; display:none;
+}
+.user-avatar{
+  width:80px; height:80px; border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  display:flex; align-items:center; justify-content:center;
+  font-size:36px; margin:0 auto 16px;
+  box-shadow:0 0 0 4px rgba(245,200,66,0.2);
+}
+.user-name{
+  font-family:'Playfair Display',serif;
+  font-size:22px; font-weight:700; margin-bottom:4px;
+}
+.user-email{ font-size:13px; color:var(--muted); margin-bottom:24px; }
+.btn-courses{
+  display:inline-block; padding:13px 32px;
+  background:var(--gold); color:#0a0f1a;
+  border-radius:12px; font-weight:700;
+  text-decoration:none; font-size:15px;
+  transition:all 0.2s; margin-bottom:12px;
+  box-shadow:0 4px 20px rgba(245,200,66,0.3);
+}
+.btn-courses:hover{ background:var(--gold2); transform:translateY(-2px); }
+.btn-logout{
+  display:block; margin-top:10px;
+  background:transparent; border:1px solid var(--border);
+  color:var(--muted); padding:11px 24px;
+  border-radius:10px; cursor:pointer;
+  font-family:'DM Sans',sans-serif; font-size:14px;
+  transition:all 0.2s; width:100%;
+}
+.btn-logout:hover{ border-color:var(--red); color:var(--red); }
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+
+<div class="wrapper">
+  <div class="logo">
+    <span>DNA</span> Classes
+    <div class="logo-sub">STUDENT PORTAL</div>
+  </div>
+
+  <!-- LOGGED IN VIEW -->
+  <div class="card" id="loggedInCard" style="display:none;">
+    <div style="text-align:center;">
+      <div class="user-avatar">🎓</div>
+      <div class="user-name" id="welcomeName">Welcome back!</div>
+      <div class="user-email" id="welcomeEmail"></div>
+      <a href="courses.html" class="btn-courses">📚 Go to My Courses</a>
+      <button class="btn-logout" onclick="logout()">🚪 Logout</button>
+    </div>
+  </div>
+
+  <!-- LOGIN / REGISTER VIEW -->
+  <div class="card" id="authCard">
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('login')">Login</button>
+      <button class="tab-btn" onclick="switchTab('register')">Register</button>
+    </div>
+
+    <!-- ALERT -->
+    <div class="alert" id="alert"></div>
+
+    <!-- LOGIN FORM -->
+    <div class="form active" id="loginForm">
+      <div class="form-group">
+        <label>📧 Email Address</label>
+        <input type="email" id="loginEmail" placeholder="you@example.com"/>
+      </div>
+      <div class="form-group">
+        <label>🔒 Password</label>
+        <input type="password" id="loginPass" placeholder="Enter your password"/>
+      </div>
+      <div class="remember-row">
+        <label>
+          <input type="checkbox" id="rememberMe" checked/>
+          Remember me
+        </label>
+        <a href="#" class="forgot">Forgot password?</a>
+      </div>
+      <button class="btn" onclick="login()">Login to DNA Classes</button>
+      <div class="divider">or</div>
+      <button class="btn-google" onclick="googleLogin()">
+        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+        Continue with Google
+      </button>
+    </div>
+
+    <!-- REGISTER FORM -->
+    <div class="form" id="registerForm">
+      <div class="form-group">
+        <label>👤 Full Name</label>
+        <input type="text" id="regName" placeholder="Rahul Sharma"/>
+      </div>
+      <div class="form-group">
+        <label>📧 Email Address</label>
+        <input type="email" id="regEmail" placeholder="you@example.com"/>
+      </div>
+      <div class="form-group">
+        <label>📱 Mobile Number</label>
+        <input type="tel" id="regPhone" placeholder="+91 98765 43210"/>
+      </div>
+      <div class="form-group">
+        <label>🔒 Password</label>
+        <input type="password" id="regPass" placeholder="Minimum 6 characters"/>
+      </div>
+      <div class="form-group">
+        <label>🔒 Confirm Password</label>
+        <input type="password" id="regPass2" placeholder="Repeat password"/>
+      </div>
+      <button class="btn" onclick="register()">Create My Account</button>
+      <div class="divider">or</div>
+      <button class="btn-google" onclick="googleLogin()">
+        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+        Continue with Google
+      </button>
+    </div>
+  </div>
+
+  <div class="card-footer">
+    <a href="index.html">← Back to DNA Classes Home</a>
+  </div>
+</div>
+
+<script>
+// =============================================
+// DNA CLASSES - AUTH SYSTEM
+// Uses localStorage to remember logged-in users
+// =============================================
+
+// Check if already logged in on page load
+window.addEventListener('load', () => {
+  const user = getLoggedInUser();
+  if (user) showLoggedIn(user);
+});
+
+// Switch between Login / Register tabs
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.form').forEach(f => f.classList.remove('active'));
+  document.querySelector(`.tab-btn:${tab==='login'?'first':'last'}-child`).classList.add('active');
+  document.getElementById(tab === 'login' ? 'loginForm' : 'registerForm').classList.add('active');
+  clearAlert();
+}
+
+// Show alert message
+function showAlert(msg, type='error') {
+  const el = document.getElementById('alert');
+  el.textContent = msg;
+  el.className = `alert ${type} show`;
+}
+function clearAlert() {
+  document.getElementById('alert').className = 'alert';
+}
+
+// Get all registered users from localStorage
+function getUsers() {
+  return JSON.parse(localStorage.getItem('dna_users') || '[]');
+}
+
+// Save users to localStorage
+function saveUsers(users) {
+  localStorage.setItem('dna_users', JSON.stringify(users));
+}
+
+// Get currently logged in user
+function getLoggedInUser() {
+  return JSON.parse(localStorage.getItem('dna_current_user') || 'null');
+}
+
+// ---- REGISTER ----
+function register() {
+  const name  = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim().toLowerCase();
+  const phone = document.getElementById('regPhone').value.trim();
+  const pass  = document.getElementById('regPass').value;
+  const pass2 = document.getElementById('regPass2').value;
+
+  if (!name || !email || !pass) return showAlert('Please fill all required fields.');
+  if (pass.length < 6) return showAlert('Password must be at least 6 characters.');
+  if (pass !== pass2) return showAlert('Passwords do not match.');
+
+  const users = getUsers();
+  if (users.find(u => u.email === email)) return showAlert('This email is already registered. Please login.');
+
+  // Save new user
+  const newUser = { name, email, phone, password: pass, purchasedCourses: [], joinedDate: new Date().toISOString() };
+  users.push(newUser);
+  saveUsers(users);
+
+  // Auto login after register
+  loginUser(newUser);
+  showAlert('✅ Account created successfully! Welcome to DNA Classes.', 'success');
+  setTimeout(() => window.location.href = 'courses.html', 1500);
+}
+
+// ---- LOGIN ----
+function login() {
+  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  const pass  = document.getElementById('loginPass').value;
+  const remember = document.getElementById('rememberMe').checked;
+
+  if (!email || !pass) return showAlert('Please enter email and password.');
+
+  const users = getUsers();
+  const user = users.find(u => u.email === email && u.password === pass);
+
+  if (!user) return showAlert('Wrong email or password. Please try again.');
+
+  loginUser(user, remember);
+  showAlert('✅ Login successful! Redirecting...', 'success');
+  setTimeout(() => window.location.href = 'courses.html', 1200);
+}
+
+// Save user session
+function loginUser(user, remember = true) {
+  // Remove password before storing in session for basic safety
+  const sessionUser = { name: user.name, email: user.email, phone: user.phone, purchasedCourses: user.purchasedCourses };
+  localStorage.setItem('dna_current_user', JSON.stringify(sessionUser));
+  if (remember) {
+    localStorage.setItem('dna_remember', 'true');
+  }
+}
+
+// ---- LOGOUT ----
+function logout() {
+  localStorage.removeItem('dna_current_user');
+  localStorage.removeItem('dna_remember');
+  document.getElementById('loggedInCard').style.display = 'none';
+  document.getElementById('authCard').style.display = 'block';
+}
+
+// ---- SHOW LOGGED IN STATE ----
+function showLoggedIn(user) {
+  document.getElementById('loggedInCard').style.display = 'block';
+  document.getElementById('authCard').style.display = 'none';
+  document.getElementById('welcomeName').textContent = 'Welcome, ' + user.name + '!';
+  document.getElementById('welcomeEmail').textContent = user.email;
+}
+
+// ---- GOOGLE LOGIN (Placeholder) ----
+function googleLogin() {
+  showAlert('Google login requires Firebase setup. For now, please use email/password.', 'error');
+}
+
+// Allow Enter key to submit
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    const loginActive = document.getElementById('loginForm').classList.contains('active');
+    if (loginActive) login(); else register();
+  }
+});
+</script>
+</body>
+</html>
